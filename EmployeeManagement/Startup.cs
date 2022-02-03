@@ -35,15 +35,11 @@ namespace EmployeeManagement
                 app.UseDeveloperExceptionPage();
             }
 
-            FileServerOptions fileServerOptions = new FileServerOptions();
-            fileServerOptions.DefaultFilesOptions.DefaultFileNames.Clear();
-            fileServerOptions.DefaultFilesOptions.DefaultFileNames.Add("home.html");
-
-            app.UseFileServer(fileServerOptions);
+            app.UseFileServer();
 
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                await context.Response.WriteAsync($"Hosting environment: {env.EnvironmentName}");
             });
         }
     }
