@@ -1,28 +1,29 @@
-﻿@model IEnumerable<EmployeeManagement.Models.Employee>
+﻿@model IEnumerable<Employee>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>silverbrain emp mng</title>
-</head>
-<body>
-    <table>
-        <thead>
+@{
+    ViewBag.Title = "Employee List";
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Department</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Department</th>
+                <td>@employee.Id</td>
+                <td>@employee.Name</td>
+                <td>@employee.Department</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach(var employee in Model)
-            {
-                <tr>
-                    <td>@employee.Id</td>
-                    <td>@employee.Name</td>
-                    <td>@employee.Department</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</body>
-</html>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/CustomScript.js"></script>
+}

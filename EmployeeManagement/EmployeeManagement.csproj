@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\" />
+    <Content Remove="wwwroot\css\" />
+    <Content Remove="wwwroot\js\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="wwwroot\" />
@@ -15,6 +17,9 @@
     <Folder Include="Views\" />
     <Folder Include="Views\Home\" />
     <Folder Include="ViewModels\" />
+    <Folder Include="Views\Shared\" />
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Controllers\" />
@@ -22,5 +27,6 @@
     <None Remove="Views\" />
     <None Remove="Views\Home\" />
     <None Remove="ViewModels\" />
+    <None Remove="Views\Shared\" />
   </ItemGroup>
 </Project>
