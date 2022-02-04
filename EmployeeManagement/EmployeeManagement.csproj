@@ -28,5 +28,7 @@
     <None Remove="Views\Home\" />
     <None Remove="ViewModels\" />
     <None Remove="Views\Shared\" />
+    <None Remove="bootstrap" />
+    <None Remove="jQuery" />
   </ItemGroup>
 </Project>

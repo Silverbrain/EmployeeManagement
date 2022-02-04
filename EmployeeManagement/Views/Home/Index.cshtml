@@ -3,27 +3,23 @@
 @{
     ViewBag.Title = "Employee List";
 }
-
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Department</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var employee in Model)
-        {
-            <tr>
-                <td>@employee.Id</td>
-                <td>@employee.Name</td>
-                <td>@employee.Department</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@section Scripts {
-    <script src="~/js/CustomScript.js"></script>
-}
+<div class="row">
+    @foreach (var employee in Model)
+    {    
+    <div class="col-sm-4">
+        <div class="card m-3">
+            <div class="card-header">
+                <h3>@employee.Name</h3>
+            </div>
+            <div class="m-3">
+                <img class="card-img-top" src="~/images/no-image.jpeg" asp-append-version="true" />
+            </div>
+            <div class="card-footer text-center m-1">
+                <a asp-controller="home" asp-action="details" asp-route-id="@employee.Id" class="btn btn-primary">View</a>
+                <a href="#" class="btn btn-primary m-1">Edit</a>
+                <a href="#" class="btn btn-danger  m-1">Delete</a>
+            </div>
+        </div>
+    </div>
+    }
+</div>
