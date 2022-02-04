@@ -1,18 +1,20 @@
-﻿<html xmlns="http://www.w3.org/1999/xhtml">
+﻿@model EmployeeManagement.ViewModels.HomeDetailsViewModel
+
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>silverbrain emp mng</title>
 </head>
 <body>
-    <h3>@ViewBag.PageTitle</h3>
+    <h3>@Model.PageTitle</h3>
 
     <div>
-        Name: @ViewBag.Employee.Name
+        Name: @Model.Employee.Name
     </div>
     <div>
-        Email: @ViewBag.Employee.Email
+        Email: @Model.Employee.Email
     </div>
     <div>
-        Department: @ViewBag.Employee.Department
+        Department: @Model.Employee.Department
     </div>
 </body>
 </html>
