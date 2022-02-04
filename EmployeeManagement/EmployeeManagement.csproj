@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Controllers\" />
+  </ItemGroup>
 </Project>
