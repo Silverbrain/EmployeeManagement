@@ -30,5 +30,9 @@
     <None Remove="Views\Shared\" />
     <None Remove="bootstrap" />
     <None Remove="jQuery" />
+    <None Remove="Microsoft.EntityFrameworkCore.SqlServer" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.13" />
   </ItemGroup>
 </Project>

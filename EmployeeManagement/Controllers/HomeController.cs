@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.Controllers
 {
-	public class HomeController : Controller
-	{
+    public class HomeController : Controller
+    {
         private readonly IEmployeeRpository _employeeRepository;
 
         public HomeController(IEmployeeRpository employeeRpository)
@@ -13,7 +13,7 @@ namespace EmployeeManagement.Controllers
             _employeeRepository = employeeRpository;
         }
 
-		public ViewResult Index()
+        public ViewResult Index()
         {
             var model = _employeeRepository.GetAllEmployees();
             return View(model);
@@ -23,7 +23,7 @@ namespace EmployeeManagement.Controllers
         {
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                Employee = _employeeRepository.GetEmployee(id??1),
+                Employee = _employeeRepository.GetEmployee(id ?? 1),
                 PageTitle = "Employee Details"
             };
 
@@ -37,10 +37,14 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        public RedirectToActionResult Create(Employee employee)
+        public IActionResult Create(Employee employee)
         {
-            Employee newEmployee = _employeeRepository.Add(employee);
-            return RedirectToAction("details", new {id = newEmployee.Id });
+            if (ModelState.IsValid)
+            {
+                Employee newEmployee = _employeeRepository.Add(employee);
+                return RedirectToAction("details", new { id = newEmployee.Id });
+            }
+            return View();
         }
     }
 }
