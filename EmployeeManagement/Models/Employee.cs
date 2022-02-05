@@ -16,6 +16,7 @@ namespace EmployeeManagement.Models
         public string Email { get; set; }
         [Required]
         public Departments? Department { get; set; }
+        public string ImagePath { get; set; }
     }
 }
 

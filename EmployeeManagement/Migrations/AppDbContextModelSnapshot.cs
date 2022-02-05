@@ -32,6 +32,9 @@ namespace EmployeeManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -40,6 +43,29 @@ namespace EmployeeManagement.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Department = 4,
+                            Email = "sina@sinaataei.ml",
+                            Name = "Sina Ataei"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Department = 1,
+                            Email = "arash@sinaataei.ml",
+                            Name = "Arash Rastegar"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Department = 3,
+                            Email = "ali@sinaataei.ml",
+                            Name = "Ali Rastegar"
+                        });
                 });
 #pragma warning restore 612, 618
         }
