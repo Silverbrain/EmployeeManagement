@@ -46,14 +46,8 @@ namespace EmployeeManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = null;
-                if(model.Image != null)
-                {
-                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
-                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
-                }
+                string uniqueFileName = ProcessImageFile(model);
+
                 Employee newEmployee = new Employee()
                 {
                     Name = model.Name,
@@ -83,6 +77,49 @@ namespace EmployeeManagement.Controllers
             };
 
             return View(employeeEdit);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(EmployeeEditViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Employee employee = _employeeRepository.GetEmployee(model.Id);
+
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Department = model.Department;
+                if(model.Image != null)
+                {
+                    if(model.ExistingImagePath != null)
+                    {
+                        string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingImagePath);
+                        System.IO.File.Delete(filePath);
+                    }
+                    employee.ImagePath = ProcessImageFile(model);
+                }
+
+                Employee updatedEmployee = _employeeRepository.Update(employee);
+
+                return RedirectToAction("index");
+            }
+            return View();
+        }
+
+        private string ProcessImageFile(EmployeeCreateViewModel model)
+        {
+            string uniqueFileName = null;
+            if (model.Image != null)
+            {
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.Image.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }
