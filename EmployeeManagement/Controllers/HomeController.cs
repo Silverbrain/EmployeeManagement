@@ -113,7 +113,7 @@ namespace EmployeeManagement.Controllers
             }
             return View();
         }
-
+        ///This method process the incoming image from view and saves it if possible.
         private string ProcessImageFile(EmployeeCreateViewModel model)
         {
             string uniqueFileName = null;
