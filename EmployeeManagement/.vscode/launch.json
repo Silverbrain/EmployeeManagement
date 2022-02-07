@@ -6,6 +6,7 @@
     "configurations": [
         {
             "name": ".NET Core Launch (web)",
+            "console": "integratedTerminal",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

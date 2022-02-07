@@ -26,6 +26,8 @@ namespace EmployeeManagement.Controllers
 
         public ViewResult Details(int id)
         {
+            throw new Exception("Testing the excepition handling of the application");
+
             Employee employee = _employeeRepository.GetEmployee(id);
 
             if(employee == null)
