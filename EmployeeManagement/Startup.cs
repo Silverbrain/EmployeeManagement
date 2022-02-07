@@ -42,6 +42,10 @@ namespace EmployeeManagement
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            }
 
             app.UseFileServer(new FileServerOptions { EnableDefaultFiles = false });
 
