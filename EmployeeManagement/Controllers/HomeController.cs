@@ -26,8 +26,6 @@ namespace EmployeeManagement.Controllers
 
         public ViewResult Details(int id)
         {
-            throw new Exception("Somthing went wrong :(");
-
             Employee employee = _employeeRepository.GetEmployee(id);
 
             if(employee == null)

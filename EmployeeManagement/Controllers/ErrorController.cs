@@ -1,5 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace EmployeeManagement.Controllers
 {
@@ -16,6 +18,15 @@ namespace EmployeeManagement.Controllers
             }
 
             return View("NotFound");
+        }
+
+        [Route("Error")]
+        [AllowAnonymous]
+        public IActionResult Error()
+        {
+            var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            return View("Error");
         }
     }
 }
