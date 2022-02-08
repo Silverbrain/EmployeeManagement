@@ -18,9 +18,11 @@ namespace EmployeeManagement
     public class Startup
     {
         private IConfiguration _config;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration config, IWebHostEnvironment env)
         {
+            _env = env;
             _config = config;
         }
 
@@ -33,6 +35,20 @@ namespace EmployeeManagement
 
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                if (_env.IsDevelopment())
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 3;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                }
+
+            });
 
             services.AddMvc().AddXmlSerializerFormatters();
 
