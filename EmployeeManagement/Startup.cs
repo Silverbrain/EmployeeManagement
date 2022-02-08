@@ -76,8 +76,8 @@ namespace EmployeeManagement
 
             app.UseFileServer(new FileServerOptions { EnableDefaultFiles = false });
 
-            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
