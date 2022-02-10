@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagement.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,9 +20,11 @@ namespace EmployeeManagement
     public class Startup
     {
         private IConfiguration _config;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration config, IWebHostEnvironment env)
         {
+            _env = env;
             _config = config;
         }
 
@@ -31,10 +35,28 @@ namespace EmployeeManagement
             services.AddDbContextPool<AppDbContext>(options =>
                 options.UseSqlServer(_config.GetConnectionString("EmployeeDBConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            services.AddMvc().AddXmlSerializerFormatters();
+            services.Configure<IdentityOptions>(options =>
+            {
+                if (_env.IsDevelopment())
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequiredLength = 3;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                }
+
+            });
+
+            services.AddMvc(options => 
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddXmlSerializerFormatters();
 
             services.AddScoped<IEmployeeRpository, SqlEmployeeRepository>();
         }
@@ -54,8 +76,10 @@ namespace EmployeeManagement
 
             app.UseFileServer(new FileServerOptions { EnableDefaultFiles = false });
 
-            app.UseAuthentication();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();

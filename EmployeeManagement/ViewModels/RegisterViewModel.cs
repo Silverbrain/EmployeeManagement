@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using EmployeeManagement.Models;
+using EmployeeManagement.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.ViewModels
 {
@@ -8,6 +10,8 @@ namespace EmployeeManagement.ViewModels
 	{
         [Required]
         [EmailAddress]
+        [Remote(action:"IsEmailInUse", controller: "Account")]
+        [ValidEmailDomain(allowedDomain: "sinaataei.ml", ErrorMessage = "Email domain must be sinaataei.ml")]
         public string Email { get; set; }
 
         [Required]
@@ -18,5 +22,7 @@ namespace EmployeeManagement.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "password values do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string City { get; set; }
     }
 }
