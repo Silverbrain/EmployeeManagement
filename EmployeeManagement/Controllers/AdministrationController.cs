@@ -189,5 +189,13 @@ namespace EmployeeManagement.Controllers
 
             return RedirectToAction("EditRole", new { id = role.Id });
         }
+
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = userManager.Users;
+
+            return View(users);
+        }
     }
 }
