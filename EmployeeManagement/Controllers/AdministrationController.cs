@@ -2,11 +2,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagement.Models;
 using EmployeeManagement.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -185,7 +187,7 @@ namespace EmployeeManagement.Controllers
                 }
             }
 
-            return RedirectToAction("EditRole", new { roleId = role.Id });
+            return RedirectToAction("EditRole", new { id = role.Id });
         }
     }
 }
