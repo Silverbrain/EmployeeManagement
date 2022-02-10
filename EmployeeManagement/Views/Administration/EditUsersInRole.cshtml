@@ -1,0 +1,29 @@
+@model EditUserRoleViewModel
+
+<form method="post">
+    <input type="hidden" asp-for="@Model.RoleId" />
+    <div class="card">
+        <div class="card-header">
+            <h2>Add or remove users from @Model.RoleName</h2>
+        </div>
+        <div class="card-body">
+            <table>
+                @for(int i = 0; i < Model.Users.Count; i++)
+                {
+                    <div class="form-check m-1">
+                        <tr>
+                            <td><input type="hidden" asp-for="@Model.Users[i].UserId" /></td>
+                            <td><input type="hidden" asp-for="@Model.Users[i].UserName" /></td>
+                            <td><input asp-for="@Model.Users[i].IsSelected" class="form-check-input" /></td>
+                            <td><label class="form-check-label" asp-for="@Model.Users[i].IsSelected">@Model.Users[i].UserName</label></td>
+                        </tr>
+                    </div>
+                }
+            </table>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Update" class="btn btn-primary"/>
+            <a asp-action="EditRole" asp-route-id="@Model.RoleId" class="btn btn-primary">Cancel</a>
+        </div>
+    </div>
+</form>
