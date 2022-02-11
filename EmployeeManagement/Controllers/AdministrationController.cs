@@ -279,5 +279,30 @@ namespace EmployeeManagement.Controllers
             }
             return View("ListUsers");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRole(string Id)
+        {
+            var role = await roleManager.FindByIdAsync(Id);
+
+            if(role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {Id} could not be found";
+                return View("NotFound");
+            }
+
+            IdentityResult result = await roleManager.DeleteAsync(role);
+
+            if(result.Succeeded)
+            {
+                return RedirectToAction("ListRoles");
+            }
+
+            foreach(var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+            return View("ListRoles");
+        }
     }
 }
