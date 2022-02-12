@@ -36,6 +36,11 @@ namespace EmployeeManagement.Controllers
 
                 if(result.Succeeded)
                 {
+                    if(signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
+
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -100,6 +105,13 @@ namespace EmployeeManagement.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("index", "home");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
