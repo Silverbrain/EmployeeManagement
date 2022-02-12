@@ -5,6 +5,8 @@ using EmployeeManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagement.Controllers
 {
@@ -13,11 +15,15 @@ namespace EmployeeManagement.Controllers
     {
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ILogger<AdministrationController> logger;
 
-        public AdministrationController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public AdministrationController(RoleManager<IdentityRole> roleManager,
+                                        UserManager<ApplicationUser> userManager,
+                                        ILogger<AdministrationController> logger)
         {
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -291,18 +297,31 @@ namespace EmployeeManagement.Controllers
                 return View("NotFound");
             }
 
-            IdentityResult result = await roleManager.DeleteAsync(role);
-
-            if(result.Succeeded)
+            try
             {
-                return RedirectToAction("ListRoles");
-            }
+                IdentityResult result = await roleManager.DeleteAsync(role);
 
-            foreach(var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("ListRoles");
+                }
+
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View("ListRoles");
             }
-            return View("ListRoles");
+            catch(DbUpdateException ex)
+            {
+                logger.LogError(ex, $"unable to delete role [{role.Name}, {role.Id}]");
+
+                ViewBag.ErrorTitle = "Error deleting role";
+                ViewBag.ErrorMessage = $"Unable to delete role \"{role.Name}\"." +
+                                        "In order to delete this role, first delete users inside it.";
+
+                return View("Error");
+            }
         }
     }
 }
