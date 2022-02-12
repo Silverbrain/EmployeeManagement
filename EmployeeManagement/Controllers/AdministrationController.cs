@@ -323,5 +323,64 @@ namespace EmployeeManagement.Controllers
                 return View("Error");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(string Id)
+        {
+            var user = await userManager.FindByIdAsync(Id);
+
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {Id} could not be found";
+                return View("NotFound");
+            }
+
+            var model = new ManageUserRolesViewModel()
+            {
+                UserId = user.Id,
+                UserName = user.UserName
+            };
+
+            foreach(var role in roleManager.Roles)
+            {
+                var userRole = new UserRole() { RoleId = role.Id, RoleName = role.Name };
+                userRole.IsSelected = await userManager.IsInRoleAsync(user, role.Name) ? true : false;
+                model.UserRoles.Add(userRole);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel model)
+        {
+            var user = await userManager.FindByIdAsync(model.UserId);
+
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = $"User with id {model.UserId} could not be found";
+                return View("NotFound");
+            }
+
+            var roles = await userManager.GetRolesAsync(user);
+            var result = await userManager.RemoveFromRolesAsync(user, roles);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove user existing roles");
+                return View(model);
+            }
+
+            result = await userManager.AddToRolesAsync(user,
+                model.UserRoles.Where(r => r.IsSelected).Select(r => r.RoleName));
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add selected roles to user");
+                return View(model);
+            }
+
+            return RedirectToAction("EditUser", new { Id = model.UserId });
+        }
     }
 }
