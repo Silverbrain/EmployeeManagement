@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagement.Controllers
 {
-    [Authorize(Policy = "AdminRolePolicy")]
+    //[Authorize(Policy = "AdminRolePolicy")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
@@ -89,8 +89,7 @@ namespace EmployeeManagement.Controllers
             }
 
             result = await userManager.AddClaimsAsync(user, model.Claims
-                .Where(c => c.IsSelected)
-                .Select(c => new Claim(c.ClaimType, c.ClaimType)));
+                .Select(c => new Claim(c.ClaimType, c.IsSelected ? "true" : "false")));
 
             if (!result.Succeeded)
             {
@@ -102,7 +101,6 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
@@ -130,7 +128,6 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
             if(ModelState.IsValid)
@@ -295,7 +292,7 @@ namespace EmployeeManagement.Controllers
                 Username = user.UserName,
                 City = user.City,
                 Roles = roles.ToList(),
-                Claims = claims.Select(c => c.Value).ToList()
+                Claims = claims.Select(c => c.Type + ": " + c.Value).ToList()
             };
 
             return View(model);
@@ -332,7 +329,6 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "DeleteRolePolicy")]
         public async Task<IActionResult> DeleteUser(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
@@ -358,7 +354,6 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "DeleteRolePolicy")]
         public async Task<IActionResult> DeleteRole(string Id)
         {
             var role = await roleManager.FindByIdAsync(Id);
@@ -397,7 +392,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpGet]
-
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string Id)
         {
             var user = await userManager.FindByIdAsync(Id);
@@ -425,6 +420,7 @@ namespace EmployeeManagement.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(ManageUserRolesViewModel model)
         {
             var user = await userManager.FindByIdAsync(model.UserId);
